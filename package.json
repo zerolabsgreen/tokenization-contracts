@@ -1,0 +1,28 @@
+{
+  "name": "@zero-labs/tokenization-contracts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zerolabsgreen/tokenization-contracts.git"
+  },
+  "scripts": {
+    "build": "tsc",
+    "metadata-coder": "ts-node src/metadata-coders/main.ts"
+  },
+  "author": "Josip Bagaric, bagaricjos@gmail.com",
+  "license": "BUSL-1.1",
+  "bugs": {
+    "url": "https://github.com/zerolabsgreen/tokenization-contracts/issues"
+  },
+  "homepage": "https://github.com/zerolabsgreen/tokenization-contracts#readme",
+  "dependencies": {
+    "ethers": "5.7.2",
+    "commander": "10.0.1"
+  },
+  "devDependencies": {
+    "typescript": "4.9.4",
+    "ts-node": "10.9.1"
+  }
+}
