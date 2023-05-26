@@ -85,11 +85,11 @@ export class CertificateMetadataCoder {
         region: generator.region,
         country: generator.country,
         name: generator.name,
-        commissioningDate: generator.commissioningDate,
+        commissioningDate: generator.commissioningDate.toNumber(),
         capacity: generator.capacity
       },
-      generationStartTime,
-      generationEndTime,
+      generationStartTime: generationStartTime.toNumber(),
+      generationEndTime: generationEndTime.toNumber(),
       productType,
       data,
     };
