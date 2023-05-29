@@ -1,4 +1,5 @@
 import { BigNumber, utils } from "ethers";
+import { ProductType } from "./types";
 
 export const decodeDynamicArray = (encodedString: string): string[] => {
   if (encodedString.length < 2) {
@@ -88,4 +89,13 @@ export const encodeDynamicArray = (data: string[]): string => {
     + paddedData;
 };
 
-export const cleanStringUnicodeChars = (str: string): string => str.replace(/[\x00-\x1F\x7F]/g, '');
+export const cleanStringUnicodeChars = (input: string): string => input.replace(/[\x00-\x1F\x7F]/g, '');
+
+export const extractProductType = (input: string): string => {
+  const productTypeValues = Object.values(ProductType);
+  const matchingProductType = productTypeValues.find(value =>
+    input.includes(value)
+  );
+
+  return matchingProductType ?? '';
+}

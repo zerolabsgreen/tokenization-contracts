@@ -1,4 +1,5 @@
 import { utils } from 'ethers';
+import { cleanStringUnicodeChars, extractProductType } from './utils';
 
 export interface IAgreementMetadata {
   productType: string;
@@ -24,12 +25,12 @@ export class AgreementMetadataCoder {
   }
 
   static decode(encodedMetadata: string): IAgreementMetadata {
-    const decodedMetadata = utils.toUtf8String(encodedMetadata).replace(/\x00/g, '');
+    const decodedMetadata = cleanStringUnicodeChars(utils.toUtf8String(encodedMetadata));
     const [productType, energySources, countryRegion, agreementId, orderId] = decodedMetadata.replace('---', '--').split('--');
     const [country, region] = countryRegion.split('-');
     
     return {
-      productType,
+      productType: extractProductType(productType),
       energySources: energySources.split(/\||,/),
       country,
       region,
