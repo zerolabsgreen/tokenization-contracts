@@ -126,6 +126,18 @@ contract BatchFactory is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         emit CertificateBatchMinted(_batchId, ids);
     }
 
+    function setExternalMetadata(
+        uint256 _id,
+        string memory _type,
+        bytes memory _externalMetadata
+    ) external onlyOwner {
+        CertificateRegistryExtended(registry).setExternalMetadata(
+            _id,
+            _type,
+            _externalMetadata
+        );
+    }
+
     function setRegistry(address _registryAddress) public onlyOwner {
         require(address(registry) == address(0), "Registry already set");
         registry = CertificateRegistryExtended(_registryAddress);
@@ -168,7 +180,7 @@ contract BatchFactory is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     }
 
     function version() external pure returns (string memory) {
-        return "1.2.1";
+        return "1.3.0";
     }
 
     /// @notice Needed for OpenZeppelin contract upgradeability.

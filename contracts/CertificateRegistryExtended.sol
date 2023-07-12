@@ -159,6 +159,6 @@ contract CertificateRegistryExtended is CertificateRegistry {
     }
 
     function version() external pure returns (string memory) {
-        return "1.2.0";
+        return "1.3.0";
     }
 }

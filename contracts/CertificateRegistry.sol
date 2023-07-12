@@ -35,6 +35,16 @@ contract CertificateRegistry is
     // Incrementing nonce, used for generating certificate IDs
     uint256 internal _latestCertificateId;
 
+    // External metadata
+    // certificateId => metadataType => value
+    mapping(uint256 => mapping(string => bytes)) public externalMetadata;
+
+    event ExternalMetadataSet(
+        uint256 _certificateId,
+        string _type,
+        bytes _externalMetadata
+    );
+
     event IssuerWhitelisted(address _issuer, uint256 indexed _topic);
     event IssuerBlacklisted(address _issuer, uint256 indexed _topic);
 
@@ -242,6 +252,25 @@ contract CertificateRegistry is
             certificate.validityData,
             certificate.data
         );
+    }
+
+    function setExternalMetadata(
+        uint256 _id,
+        string memory _type,
+        bytes memory _externalMetadata
+    ) external {
+        require(
+            certificateStorage[_id].issuer != address(0),
+            "certificate doesn't exist"
+        );
+        _isIssuer(certificateStorage[_id].topic);
+        require(
+            externalMetadata[_id][_type].length == 0,
+            "certificate already has external metadata set for that type"
+        );
+
+        externalMetadata[_id][_type] = _externalMetadata;
+        emit ExternalMetadataSet(_id, _type, _externalMetadata);
     }
 
     function whitelistIssuer(
