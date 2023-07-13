@@ -35,15 +35,13 @@ contract CertificateRegistry is
     // Incrementing nonce, used for generating certificate IDs
     uint256 internal _latestCertificateId;
 
-    // External metadata
-    // certificateId => metadataType => value
+    // DEPRECATED
     mapping(uint256 => mapping(string => bytes)) public externalMetadata;
 
-    event ExternalMetadataSet(
-        uint256 _certificateId,
-        string _type,
-        bytes _externalMetadata
-    );
+    // certificateId => metadata
+    mapping(uint256 => bytes) public certificateMetadata;
+
+    event CertificateMetadataSet(uint256 _certificateId, bytes _metadata);
 
     event IssuerWhitelisted(address _issuer, uint256 indexed _topic);
     event IssuerBlacklisted(address _issuer, uint256 indexed _topic);
@@ -74,8 +72,10 @@ contract CertificateRegistry is
             topic: _topic,
             issuer: _msgSender(),
             validityData: _validityData,
-            data: _data
+            data: new bytes(0)
         });
+
+        setMetadata(id, _data);
 
         ERC1155Upgradeable._mint(
             _to,
@@ -112,8 +112,10 @@ contract CertificateRegistry is
                 topic: _topics[i],
                 issuer: operator,
                 validityData: _validityData[i],
-                data: _data[i]
+                data: new bytes(0)
             });
+
+            setMetadata(ids[i], _data[i]);
         }
 
         _latestCertificateId = ids[ids.length - 1];
@@ -250,27 +252,23 @@ contract CertificateRegistry is
             certificate.issuer,
             certificate.topic,
             certificate.validityData,
-            certificate.data
+            certificateMetadata[_id]
         );
     }
 
-    function setExternalMetadata(
-        uint256 _id,
-        string memory _type,
-        bytes memory _externalMetadata
-    ) external {
+    function setMetadata(uint256 _id, bytes memory _metadata) public {
         require(
             certificateStorage[_id].issuer != address(0),
             "certificate doesn't exist"
         );
         _isIssuer(certificateStorage[_id].topic);
         require(
-            externalMetadata[_id][_type].length == 0,
-            "certificate already has external metadata set for that type"
+            certificateMetadata[_id].length == 0,
+            "certificate already has metadata set"
         );
 
-        externalMetadata[_id][_type] = _externalMetadata;
-        emit ExternalMetadataSet(_id, _type, _externalMetadata);
+        certificateMetadata[_id] = _metadata;
+        emit CertificateMetadataSet(_id, _metadata);
     }
 
     function whitelistIssuer(

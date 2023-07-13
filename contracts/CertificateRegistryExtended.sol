@@ -55,8 +55,10 @@ contract CertificateRegistryExtended is CertificateRegistry {
                 topic: _topics[i],
                 issuer: operator,
                 validityData: _validityData[i],
-                data: _data[i]
+                data: new bytes(0)
             });
+
+            setMetadata(ids[i], _data[i]);
         }
 
         _latestCertificateId = ids[ids.length - 1];
@@ -159,6 +161,6 @@ contract CertificateRegistryExtended is CertificateRegistry {
     }
 
     function version() external pure returns (string memory) {
-        return "1.3.0";
+        return "1.3.1";
     }
 }
