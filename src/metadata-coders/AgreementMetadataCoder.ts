@@ -8,6 +8,7 @@ export interface IAgreementMetadata {
   region: string;
   agreementId: string;
   orderId: string;
+  data?: string;
 }
 
 export class AgreementMetadataCoder {
@@ -17,7 +18,8 @@ export class AgreementMetadataCoder {
       metadata.energySources.join(','),
       [metadata.country, metadata.region].join('-'),
       metadata.agreementId,
-      metadata.orderId
+      metadata.orderId,
+      metadata.data ?? null
     ].join('--');
 
     const bytes = utils.toUtf8Bytes(metadataConcatenatedString);
@@ -26,7 +28,7 @@ export class AgreementMetadataCoder {
 
   static decode(encodedMetadata: string): IAgreementMetadata {
     const decodedMetadata = cleanStringUnicodeChars(utils.toUtf8String(encodedMetadata));
-    const [productType, energySources, countryRegion, agreementId, orderId] = decodedMetadata.replace('---', '--').split('--');
+    const [productType, energySources, countryRegion, agreementId, orderId, data] = decodedMetadata.replace('---', '--').split('--');
     const [country, region] = countryRegion.split('-');
     
     return {
@@ -35,7 +37,8 @@ export class AgreementMetadataCoder {
       country,
       region,
       agreementId,
-      orderId
+      orderId,
+      data
     };
   }
 }

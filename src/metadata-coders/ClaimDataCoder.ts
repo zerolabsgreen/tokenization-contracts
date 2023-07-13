@@ -9,6 +9,7 @@ export interface IClaimData {
   purpose: string;
   consumptionEntityID: string;
   proofID: string;
+  data?: string;
 }
 
 export class ClaimDataCoder {
@@ -22,6 +23,7 @@ export class ClaimDataCoder {
       claimData.purpose,
       claimData.consumptionEntityID,
       claimData.proofID,
+      claimData.data ?? ''
     ]);
   }
 
@@ -34,7 +36,8 @@ export class ClaimDataCoder {
       periodEndDate,
       purpose,
       consumptionEntityID,
-      proofID
+      proofID,
+      data
     ] = decodeDynamicArray(encodedClaimData);
 
     return {
@@ -46,6 +49,7 @@ export class ClaimDataCoder {
       purpose,
       consumptionEntityID,
       proofID,
+      data
     };
   }
 }
