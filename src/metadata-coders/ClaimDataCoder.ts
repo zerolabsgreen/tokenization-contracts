@@ -1,4 +1,4 @@
-import { decodeDynamicArray, encodeDynamicArray } from './utils';
+import { utils } from "ethers";
 
 export interface IClaimData {
   beneficiary: string;
@@ -9,25 +9,25 @@ export interface IClaimData {
   purpose: string;
   consumptionEntityID: string;
   proofID: string;
-  data?: string;
+  data: string;
 }
 
 export class ClaimDataCoder {
-  static encode(claimData: IClaimData): string {  
-    return encodeDynamicArray([
-      claimData.beneficiary,
-      claimData.region,
-      claimData.countryCode,
-      claimData.periodStartDate,
-      claimData.periodEndDate,
-      claimData.purpose,
-      claimData.consumptionEntityID,
-      claimData.proofID,
-      claimData.data ?? ''
+  static encode(metadata: IClaimData): string {
+    return utils.defaultAbiCoder.encode(Array(9).fill("string"), [
+      metadata.beneficiary,
+      metadata.region,
+      metadata.countryCode,
+      metadata.periodStartDate,
+      metadata.periodEndDate,
+      metadata.purpose,
+      metadata.consumptionEntityID,
+      metadata.proofID,
+      metadata.data,
     ]);
   }
 
-  static decode(encodedClaimData: string): IClaimData {
+  static decode(encodedMetadata: string): IClaimData {
     const [
       beneficiary,
       region,
@@ -37,8 +37,8 @@ export class ClaimDataCoder {
       purpose,
       consumptionEntityID,
       proofID,
-      data
-    ] = decodeDynamicArray(encodedClaimData);
+      data,
+    ] = utils.defaultAbiCoder.decode(Array(9).fill("string"), encodedMetadata);
 
     return {
       beneficiary,
@@ -49,7 +49,7 @@ export class ClaimDataCoder {
       purpose,
       consumptionEntityID,
       proofID,
-      data
+      data,
     };
   }
 }
