@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from "chai";
+
 import { ClaimDataCoder, IClaimData } from "../src";
 
 export const CLAIM_DATA: IClaimData = {

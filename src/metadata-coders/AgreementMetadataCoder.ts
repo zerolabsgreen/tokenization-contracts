@@ -1,5 +1,5 @@
-import { utils } from 'ethers';
-import { cleanStringUnicodeChars, extractProductType } from './utils';
+import { hexlify, toUtf8Bytes, toUtf8String } from "ethers";
+import { cleanStringUnicodeChars, extractProductType } from "./utils";
 
 export interface IAgreementMetadata {
   productType: string;
@@ -15,22 +15,31 @@ export class AgreementMetadataCoder {
   static encode(metadata: IAgreementMetadata): string {
     const metadataConcatenatedString = [
       metadata.productType,
-      metadata.energySources.join(','),
-      [metadata.country, metadata.region].join('-'),
+      metadata.energySources.join(","),
+      [metadata.country, metadata.region].join("-"),
       metadata.agreementId,
       metadata.orderId,
-      metadata.data ?? null
-    ].join('--');
+      metadata.data ?? null,
+    ].join("--");
 
-    const bytes = utils.toUtf8Bytes(metadataConcatenatedString);
-    return utils.hexlify(bytes);
+    const bytes = toUtf8Bytes(metadataConcatenatedString);
+    return hexlify(bytes);
   }
 
   static decode(encodedMetadata: string): IAgreementMetadata {
-    const decodedMetadata = cleanStringUnicodeChars(utils.toUtf8String(encodedMetadata));
-    const [productType, energySources, countryRegion, agreementId, orderId, data] = decodedMetadata.replace('---', '--').split('--');
-    const [country, region] = countryRegion.split('-');
-    
+    const decodedMetadata = cleanStringUnicodeChars(
+      toUtf8String(encodedMetadata)
+    );
+    const [
+      productType,
+      energySources,
+      countryRegion,
+      agreementId,
+      orderId,
+      data,
+    ] = decodedMetadata.replace("---", "--").split("--");
+    const [country, region] = countryRegion.split("-");
+
     return {
       productType: extractProductType(productType),
       energySources: energySources.split(/\||,/),
@@ -38,7 +47,7 @@ export class AgreementMetadataCoder {
       region,
       agreementId,
       orderId,
-      data
+      data,
     };
   }
 }

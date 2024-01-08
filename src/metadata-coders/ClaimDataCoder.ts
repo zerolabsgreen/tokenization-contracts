@@ -1,4 +1,4 @@
-import { utils } from "ethers";
+import { AbiCoder } from "ethers";
 
 export interface IClaimData {
   beneficiary: string;
@@ -14,7 +14,7 @@ export interface IClaimData {
 
 export class ClaimDataCoder {
   static encode(metadata: IClaimData): string {
-    return utils.defaultAbiCoder.encode(Array(9).fill("string"), [
+    return AbiCoder.defaultAbiCoder().encode(Array(9).fill("string"), [
       metadata.beneficiary,
       metadata.region,
       metadata.countryCode,
@@ -38,7 +38,10 @@ export class ClaimDataCoder {
       consumptionEntityID,
       proofID,
       data,
-    ] = utils.defaultAbiCoder.decode(Array(9).fill("string"), encodedMetadata);
+    ] = AbiCoder.defaultAbiCoder().decode(
+      Array(9).fill("string"),
+      encodedMetadata
+    );
 
     return {
       beneficiary,

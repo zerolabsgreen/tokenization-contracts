@@ -8,9 +8,10 @@
     "url": "git+https://github.com/zerolabsgreen/tokenization-contracts.git"
   },
   "scripts": {
-    "build": "rm -rf dist && tsc",
+    "clean": "rm -rf dist",
+    "build": "yarn clean && tsc",
     "metadata-coder": "ts-node src/metadata-coders/main.ts",
-    "test": "mocha -r ts-node/register test/*.test.ts --exit"
+    "test": "mocha"
   },
   "author": "Josip Bagaric, bagaricjos@gmail.com",
   "license": "BUSL-1.1",
@@ -19,7 +20,7 @@
   },
   "homepage": "https://github.com/zerolabsgreen/tokenization-contracts#readme",
   "dependencies": {
-    "ethers": "5.7.2",
+    "ethers": "6.9.2",
     "commander": "10.0.1"
   },
   "devDependencies": {
